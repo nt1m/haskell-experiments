@@ -1,0 +1,24 @@
+# I might store some secret stuff, who knows?
+private/*
+
+# Build files
+dist/*
+*.hi
+*.o
+
+# Webstorm files
+.idea/*
+
+# Vim swap files
+*.swp
+*.swo
+
+# Sublime files
+*.sublime-workspace
+*.sublime-project
+
+# Windows files
+Thumbs.db
+
+# Mac files
+.DS_Store
