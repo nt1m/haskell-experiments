@@ -1,10 +1,11 @@
-module Colors where
+module Main where
 
 --import Data.ByteString hiding (take, length, drop, maximum, foldr, zip)
 import Data.List
 import Codec.Picture
 import Data.Word
 import qualified Codec.Picture.Types as M
+import Data.Map
 
 -- Word8 = integer from 0 to 255
 type Color = (Word8, Word8, Word8)
@@ -12,7 +13,7 @@ type Channel = Char
 
 main :: IO ()
 main = do
-  contents <- readImage "image2.png"
+  contents <- readImage "image.jpg"
   case contents of
     Left error -> putStrLn ("Could not read image: " ++ error)
     Right dynImg -> do
@@ -20,7 +21,7 @@ main = do
       putStrLn "Yay, finished converting the image"
       let pixels = convertToListOfColors img
       putStrLn "Finished processing pixels"
-      let mostUsedColor = show $ getMostUsedColor pixels
+      let mostUsedColor = "rgb" ++ (show . getMostUsedColor) pixels
       putStrLn mostUsedColor
       putStrLn "Yay, we got the most used color"
     --Right DynImage -> putStrLn ("Unexpected pixel format")
@@ -68,7 +69,7 @@ isChEq :: Channel -> Color -> Color -> Bool
 isChEq c c1 c2 = (c1 /> c) == (c2 /> c) 
 
 getMostDiverseChannel :: [Color] -> Channel
-getMostDiverseChannel [] = error "Median of empty list"
+getMostDiverseChannel [] = error "Empty list"
 getMostDiverseChannel xs = (snd . maximum) [(rCount, 'r'), (gCount, 'g'), (bCount, 'b')]
   where
     rCount = getNumberOfDifferentValues 'r' xs
@@ -85,7 +86,7 @@ elemWithPredicate p item (x:xs)
   | otherwise = elemWithPredicate p item xs
 
 -- Only works with a sorted list :/
-getOccurancesOfValues :: (a -> a -> Bool) -> [a] -> [(Int, a)]
+getOccurancesOfValues :: (a -> a -> Bool) -> [a] -> Map Int a
 getOccurancesOfValues p xs = foldr f [] (zip (repeat 1) xs)
   where
     f (o, x) [] = [(o, x)]
